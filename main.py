@@ -22,7 +22,11 @@ class MyWidget(QMainWindow):
         self.table.setColumnCount(len(result[0]))
         self.table.setHorizontalHeaderLabels(['ID', 'Название', 'Тип прожарки',
                                               'Тип кофе', 'Описание', 'Цена', 'Вес'])
-
+        for i, elem in enumerate(result):
+            result[i] = list(result[i])
+            result[i][2] = \
+            self.cur.execute(f"SELECT name FROM Roasting WHERE roasting_id={result[i][2]}").fetchall()[0][0]
+            result[i][3] = self.cur.execute(f"SELECT name FROM Types WHERE type_id={result[i][3]}").fetchall()[0][0]
         for i, elem in enumerate(result):
             for j, item in enumerate(elem):
                 cur_item = QTableWidgetItem(str(item))
