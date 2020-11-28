@@ -17,7 +17,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.con = sqlite3.connect('release/coffee.sqlite')
+        self.con = sqlite3.connect('coffee.sqlite')
         self.cur = self.con.cursor()
         self.btn_add.clicked.connect(self.add_coffee)
         self.btn_edit.clicked.connect(self.edit_coffee)
@@ -27,10 +27,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def update(self):
         result = self.cur.execute("SELECT * FROM Coffee").fetchall()
         self.result = list(result)
-        if not result:
-            return
+
         self.table.setRowCount(len(result))
-        self.table.setColumnCount(len(result[0]))
+        if result:
+            self.table.setColumnCount(len(result[0]))
         self.table.setHorizontalHeaderLabels(['ID', 'Название', 'Тип прожарки',
                                               'Тип кофе', 'Описание', 'Цена', 'Вес'])
         for i, elem in enumerate(result):
@@ -90,7 +90,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.cur.execute(f"DELETE FROM Coffee WHERE id={cur_id}")
         self.con.commit()
         self.update()
-        self.statusbar.showMessage('Успешно')
+        self.statusbar.showMessage('Успешно, выделение переведено на последнюю строку')
 
 
 class AddEditCoffeeWindow(QMainWindow, Ui_AddEdit):
@@ -98,7 +98,7 @@ class AddEditCoffeeWindow(QMainWindow, Ui_AddEdit):
         super().__init__()
         self.setupUi(self)
         self.edit_id = edit_id
-        self.con = sqlite3.connect('release/coffee.sqlite')
+        self.con = sqlite3.connect('coffee.sqlite')
         self.cur = self.con.cursor()
         self.roastings = self.cur.execute("SELECT * FROM Roasting").fetchall()
         for i in self.roastings:
