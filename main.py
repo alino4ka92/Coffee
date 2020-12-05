@@ -82,7 +82,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.statusbar.showMessage('Выберите элемент для удаления')
             return
         valid = QMessageBox.question(
-            self, '', "Действительно удалить элемент?",
+            self, '', f"Действительно удалить элемент в строке {row + 1}?",
             QMessageBox.Yes, QMessageBox.No)
         if valid != QMessageBox.Yes:
             return
